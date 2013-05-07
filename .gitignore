@@ -1,8 +1,11 @@
+bin
+build
+testing
+target/maven*
+
+.classpath
+.project
+.settings
+
 *.class
 
-# Package Files #
-*.jar
-*.war
-*.ear
-/bin
-/target
