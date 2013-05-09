@@ -28,6 +28,7 @@ import com.cffreedom.utils.file.FileUtils;
  * Changes:
  * 2013-04-12 	markjacobsen.net	Using DbConn bean, added getDbConn(), and getConnection() 
  * 2013-05-06 	markjacobsen.net 	Just an UI into the util class ConnectionManager
+ * 2013-05-09 	markjacobsen.net 	Added constructor to pass in default user/pass
  */
 public class DbConnManager extends ConnectionManager
 {
@@ -36,6 +37,8 @@ public class DbConnManager extends ConnectionManager
 	private String lastDb = null;
 	private String lastHost = null;
 	private String lastPort = null;
+	private String defaultUsername = SystemUtils.getUsername();
+	private String defaultPassword = null;
 	
 	public DbConnManager() throws DbException
 	{
@@ -45,6 +48,13 @@ public class DbConnManager extends ConnectionManager
 	public DbConnManager(String file) throws DbException
 	{
 		super(file);
+	}
+	
+	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws DbException
+	{
+		super(file);
+		this.defaultUsername = defaultUsername;
+		this.defaultPassword = defaultPassword;
 	}
 	
 	public static void main(String[] args) throws DbException
@@ -61,8 +71,8 @@ public class DbConnManager extends ConnectionManager
 			key = Utils.prompt("Key");
 		}
 		
-		String user = Utils.prompt("Username", SystemUtils.getUsername());
-		String pass = Utils.promptPassword();
+		String user = Utils.prompt("Username", this.defaultUsername);
+		String pass = promptForPassword();
 			
 		return super.getConnection(key, user, pass);
 	}
@@ -205,8 +215,8 @@ public class DbConnManager extends ConnectionManager
 		
 		if (super.keyExists(key) == true)
 		{
-			String user = Utils.prompt("Username", SystemUtils.getUsername());
-			String pass = Utils.promptPassword();
+			String user = Utils.prompt("Username", this.defaultUsername);
+			String pass = promptForPassword();
 			super.testConnection(key, user, pass);
 		}
 		else
@@ -285,8 +295,8 @@ public class DbConnManager extends ConnectionManager
 		
 		if (testConn.equalsIgnoreCase("Y") == true)
 		{
-			String user = Utils.prompt("Username", SystemUtils.getUsername());
-			String pass = Utils.promptPassword();
+			String user = Utils.prompt("Username", this.defaultUsername);
+			String pass = promptForPassword();
 			try
 			{
 				boolean success = DbUtils.testConnection(retConn.getType(), retConn.getHost(), retConn.getDb(), retConn.getPort(), user, pass);
@@ -333,5 +343,15 @@ public class DbConnManager extends ConnectionManager
 		else if (choice.equalsIgnoreCase("4") == true) { ret = BaseDAO.TYPE_ODBC; }
 	
 		return ret;
+	}
+	
+	private String promptForPassword()
+	{
+		String pass = Utils.promptPassword();
+		if ((pass == null) || (pass.length() == 0))
+		{
+			pass = this.defaultPassword;
+		}
+		return pass;
 	}
 }

@@ -28,6 +28,7 @@ import com.cffreedom.utils.Utils;
  * 
  * Changes:
  * 2013-05-06 	markjacobsen.net 	Created
+ * 2013-05-09 	markjacobsen.net 	Added constructor to pass in default user/pass
  */
 public class DbUtil
 {
@@ -44,6 +45,11 @@ public class DbUtil
 	public DbUtil(String connectionFile) throws DbException
 	{
 		this.dcm = new DbConnManager(connectionFile);
+	}
+	
+	public DbUtil(String connectionFile, String defaultUsername, String defaultPassword) throws DbException
+	{
+		this.dcm = new DbConnManager(connectionFile, defaultUsername, defaultPassword);
 	}
 	
 	public static void main(String[] args) throws DbException
