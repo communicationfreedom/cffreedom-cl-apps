@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.cffreedom.apps.DbConnManager;
+import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.DbException;
 import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
@@ -160,6 +161,19 @@ public class DbUtil
 						Utils.output("ERROR: Unknown connection: " + key);
 					}
 				}
+				else if (lastMenuChoice.equalsIgnoreCase("4") == true)
+				{
+					// List tables
+					this.dcm.printKeys();
+					Utils.output("");
+					
+					String key = Utils.prompt("Key", lastConnKey);
+					if (this.dcm.keyExists(key) == true)
+					{
+						//DbConn dbconn = this.dcm.getDbConn(key);
+						//DbUtils.listTables(dbconn, user, pass);
+					}
+				}
 				else if (lastMenuChoice.equalsIgnoreCase("80") == true)
 				{
 					// Show SQL Hist
@@ -252,6 +266,7 @@ public class DbUtil
 		Utils.output("1) Connection Manager");
 		Utils.output("2) Run SQL");
 		Utils.output("3) Run Script");
+		Utils.output("4) List tables");
 		Utils.output("80) View SQL Hist");
 		Utils.output("81) View Script Hist");
 		Utils.output("90) Delete SQL Hist");
