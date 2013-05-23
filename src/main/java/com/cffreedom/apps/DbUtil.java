@@ -30,6 +30,7 @@ import com.cffreedom.utils.Utils;
  * Changes:
  * 2013-05-06 	markjacobsen.net 	Created
  * 2013-05-09 	markjacobsen.net 	Added constructor to pass in default user/pass
+ * 2013-05-23 	markjacobsen.net 	Added option to list tables
  */
 public class DbUtil
 {
@@ -170,8 +171,9 @@ public class DbUtil
 					String key = Utils.prompt("Key", lastConnKey);
 					if (this.dcm.keyExists(key) == true)
 					{
-						//DbConn dbconn = this.dcm.getDbConn(key);
-						//DbUtils.listTables(dbconn, user, pass);
+						lastConnKey = key;
+						DbConn dbconn = this.dcm.getDbConnWithUserInfo(key);
+						DbUtils.listTables(dbconn);
 					}
 				}
 				else if (lastMenuChoice.equalsIgnoreCase("80") == true)
