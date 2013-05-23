@@ -29,6 +29,7 @@ import com.cffreedom.utils.file.FileUtils;
  * 2013-04-12 	markjacobsen.net	Using DbConn bean, added getDbConn(), and getConnection() 
  * 2013-05-06 	markjacobsen.net 	Just an UI into the util class ConnectionManager
  * 2013-05-09 	markjacobsen.net 	Added constructor to pass in default user/pass
+ * 2013-05-23 	markjacobsen.net 	Added getDbConnWithUserInfo()
  */
 public class DbConnManager extends ConnectionManager
 {
@@ -75,6 +76,21 @@ public class DbConnManager extends ConnectionManager
 		String pass = promptForPassword();
 			
 		return super.getConnection(key, user, pass);
+	}
+	
+	public DbConn getDbConnWithUserInfo(String key)
+	{
+		while ((key == null) || (key.length() == 0) || (super.keyExists(key) == false))
+		{
+			super.printKeys();
+			key = Utils.prompt("Key");
+		}
+		
+		DbConn dbconn = super.getDbConn(key);
+		dbconn.setUser(Utils.prompt("Username", this.defaultUsername));
+		dbconn.setPassword(promptForPassword());
+			
+		return dbconn;
 	}
 	
 	public void run() throws DbException
