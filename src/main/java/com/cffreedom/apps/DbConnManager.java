@@ -139,6 +139,8 @@ public class DbConnManager extends ConnectionManager
 			}
 			Utils.output("\n\n");
 		}
+		
+		super.close();
 	}
 	
 	private String menu(String defaultChoice)
