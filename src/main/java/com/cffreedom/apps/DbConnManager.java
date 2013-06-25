@@ -30,6 +30,7 @@ import com.cffreedom.utils.file.FileUtils;
  * 2013-05-06 	markjacobsen.net 	Just an UI into the util class ConnectionManager
  * 2013-05-09 	markjacobsen.net 	Added constructor to pass in default user/pass
  * 2013-05-23 	markjacobsen.net 	Added getDbConnWithUserInfo()
+ * 2013-06-25 	markjacobsen.net 	Added option to cache connections
  */
 public class DbConnManager extends ConnectionManager
 {
@@ -54,6 +55,13 @@ public class DbConnManager extends ConnectionManager
 	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws DbException
 	{
 		super(file);
+		this.defaultUsername = defaultUsername;
+		this.defaultPassword = defaultPassword;
+	}
+	
+	public DbConnManager(String file, String defaultUsername, String defaultPassword, boolean cacheConnections) throws DbException
+	{
+		super(file, cacheConnections);
 		this.defaultUsername = defaultUsername;
 		this.defaultPassword = defaultPassword;
 	}
