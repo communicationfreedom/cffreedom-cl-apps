@@ -316,7 +316,10 @@ public class DbConnManager extends ConnectionManager
 			}
 		}
 		
-		retConn = new DbConn(type, host, db, ConversionUtils.toInt(port));
+		int intPort = ConversionUtils.toInt(port);
+		String driver = BaseDAO.getDriver(type);
+		String url = BaseDAO.getUrl(type, host, db, intPort);
+		retConn = new DbConn(driver, url, type, host, db, intPort);
 		testConn = Utils.prompt("Test connection before adding?", "Y");
 		
 		if (testConn.equalsIgnoreCase("Y") == true)
