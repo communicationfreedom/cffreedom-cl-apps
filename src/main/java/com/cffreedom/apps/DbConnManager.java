@@ -2,10 +2,12 @@ package com.cffreedom.apps;
 
 import java.sql.Connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.DbException;
 import com.cffreedom.utils.ConversionUtils;
-import com.cffreedom.utils.LoggerUtil;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 import com.cffreedom.utils.db.BaseDAO;
@@ -34,7 +36,7 @@ import com.cffreedom.utils.file.FileUtils;
  */
 public class DbConnManager extends ConnectionManager
 {
-	private final LoggerUtil logger = new LoggerUtil(LoggerUtil.FAMILY_UTIL, this.getClass().getPackage().getName() + "." + this.getClass().getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.DbConnManager");
 	private String lastType = null;
 	private String lastDb = null;
 	private String lastHost = null;

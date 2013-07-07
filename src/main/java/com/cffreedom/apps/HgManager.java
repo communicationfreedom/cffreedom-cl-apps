@@ -2,9 +2,11 @@ package com.cffreedom.apps;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cffreedom.utils.file.FileUtils;
 import com.cffreedom.utils.KeyValueFileMgr;
-import com.cffreedom.utils.LoggerUtil;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 
@@ -26,7 +28,7 @@ import com.cffreedom.utils.Utils;
 public class HgManager
 {
 	public static final String DEFAULT_FILE = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "hg.dat";
-	private final LoggerUtil logger = new LoggerUtil(LoggerUtil.FAMILY_UTIL, this.getClass().getPackage().getName() + "." + this.getClass().getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.HgManager");
 	private KeyValueFileMgr kvfm = null;
 	private String file = null;
 	
@@ -48,11 +50,9 @@ public class HgManager
 	
 	public boolean loadFile(String file)
 	{
-		final String METHOD = "loadFile";
-		
 		if (file == null) { file = HgManager.DEFAULT_FILE; }
 		
-		logger.logDebug(METHOD, "Loading file: " + file);
+		logger.debug("Loading file: {}", file);
 		this.file = file;
 		this.kvfm = new KeyValueFileMgr(this.file);  // init so we can use it from other apps
 		return true;

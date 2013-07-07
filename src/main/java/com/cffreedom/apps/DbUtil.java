@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cffreedom.apps.DbConnManager;
 import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.DbException;
@@ -11,7 +14,6 @@ import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.ConversionUtils;
 import com.cffreedom.utils.file.FileUtils;
-import com.cffreedom.utils.LoggerUtil;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 
@@ -36,7 +38,7 @@ public class DbUtil
 {
 	private final static String SCRIPT_HIST = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "dbutils.script.hist";
 	private final static String SQL_HIST = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "dbutils.sql.hist";
-	private final LoggerUtil logger = new LoggerUtil(LoggerUtil.FAMILY_UTIL, this.getClass().getPackage().getName() + "." + this.getClass().getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.DbUtil");
 	private DbConnManager dcm = null;
 	private String lastConnKey = null;
 	private String lastMenuChoice = null;
@@ -225,7 +227,7 @@ public class DbUtil
 				}
 				else
 				{
-					logger.logWarn(METHOD, "Script file does NOT exist: " + scriptFile);
+					logger.warn("Script file does NOT exist: {}", scriptFile);
 				}
 			}
 		}

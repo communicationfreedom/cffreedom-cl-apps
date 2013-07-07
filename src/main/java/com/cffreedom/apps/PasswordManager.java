@@ -1,8 +1,10 @@
 package com.cffreedom.apps;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cffreedom.beans.PasswordEntry;
 import com.cffreedom.utils.KeyValueFileMgr;
-import com.cffreedom.utils.LoggerUtil;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 import com.cffreedom.utils.security.EncryptDecryptProxy;
@@ -26,7 +28,7 @@ import com.cffreedom.utils.file.FileUtils;
 public class PasswordManager
 {
 	public static final String DEFAULT_FILE = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "pwmgr.pw";
-	private final LoggerUtil logger = new LoggerUtil(LoggerUtil.FAMILY_UTIL, this.getClass().getPackage().getName() + "." + this.getClass().getSimpleName());
+	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.PasswordManager");
 	private String file = null;
 	private String masterKey = null;
 	KeyValueFileMgr pwm = null;
@@ -39,15 +41,14 @@ public class PasswordManager
 	
 	public PasswordManager(String file, String masterKey)
 	{
-		final String METHOD = "<init>";
 		if (file != null)
 		{
-			logger.logDebug(METHOD, "Opening file: " + file);
+			logger.debug("Opening file: {}", file);
 			this.file = file;
 		}
 		if (masterKey != null)
 		{
-			logger.logDebug(METHOD, "Master key passed in");
+			logger.debug("Master key passed in");
 			this.masterKey = masterKey;
 			this.encDecProx = new EncryptDecryptProxy(this.masterKey);
 		}

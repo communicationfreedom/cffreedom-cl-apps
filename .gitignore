@@ -9,3 +9,4 @@ target/maven*
 
 *.class
 
+/target
