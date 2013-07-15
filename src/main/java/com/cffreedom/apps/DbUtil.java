@@ -13,7 +13,7 @@ import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
-import com.cffreedom.utils.ConversionUtils;
+import com.cffreedom.utils.Convert;
 import com.cffreedom.utils.file.FileUtils;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
@@ -331,10 +331,10 @@ public class DbUtil
 						counter++;
 						Utils.output(counter + ") " + file);
 					}
-					String choice = Utils.prompt("Option (Choose 0 for a new script)", ConversionUtils.toString(counter));
+					String choice = Utils.prompt("Option (Choose 0 for a new script)", Convert.toString(counter));
 					if (Utils.isInt(choice) == true)
 					{
-						int item = ConversionUtils.toInt(choice);
+						int item = Convert.toInt(choice);
 						if ((item > 0) && (item <= files.size()))
 						{
 							retVal = files.get(item - 1);

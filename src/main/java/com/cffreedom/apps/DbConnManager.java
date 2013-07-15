@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.FileSystemException;
-import com.cffreedom.utils.ConversionUtils;
+import com.cffreedom.utils.Convert;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 import com.cffreedom.utils.db.ConnectionManager;
@@ -292,7 +292,7 @@ public class DbConnManager extends ConnectionManager
 				db = Utils.prompt("DB", this.lastDb);
 				host = Utils.prompt("Host", this.lastHost);
 				
-				String defaultPort = ConversionUtils.toString(DbUtils.getDefaultPort(type));
+				String defaultPort = Convert.toString(DbUtils.getDefaultPort(type));
 				if ((defaultPort == null) || (defaultPort.equalsIgnoreCase("0") == true)) { defaultPort = this.lastPort; }
 				port = Utils.prompt("Port", defaultPort);
 				
@@ -316,11 +316,11 @@ public class DbConnManager extends ConnectionManager
 			{
 				db = Utils.prompt("DB", currInfo.getDb());
 				host = Utils.prompt("Host", currInfo.getHost());
-				port = Utils.prompt("Port", ConversionUtils.toString(currInfo.getPort()));
+				port = Utils.prompt("Port", Convert.toString(currInfo.getPort()));
 			}
 		}
 		
-		int intPort = ConversionUtils.toInt(port);
+		int intPort = Convert.toInt(port);
 		String driver = DbUtils.getDriver(type);
 		String url = DbUtils.getUrl(type, host, db, intPort);
 		retConn = new DbConn(driver, url, type, host, db, intPort);
