@@ -1,5 +1,6 @@
 package com.cffreedom.apps;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cffreedom.apps.DbConnManager;
 import com.cffreedom.beans.DbConn;
-import com.cffreedom.exceptions.DbException;
+import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.ConversionUtils;
@@ -36,29 +37,29 @@ import com.cffreedom.utils.Utils;
  */
 public class DbUtil
 {
-	private final static String SCRIPT_HIST = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "dbutils.script.hist";
-	private final static String SQL_HIST = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "dbutils.sql.hist";
+	private final static String SCRIPT_HIST = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "dbutils.script.hist";
+	private final static String SQL_HIST = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "dbutils.sql.hist";
 	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.DbUtil");
 	private DbConnManager dcm = null;
 	private String lastConnKey = null;
 	private String lastMenuChoice = null;
 	
-	public DbUtil() throws DbException
+	public DbUtil() throws FileSystemException, IOException
 	{
 		this.dcm = new DbConnManager();
 	}
 	
-	public DbUtil(String connectionFile) throws DbException
+	public DbUtil(String connectionFile) throws FileSystemException, IOException
 	{
 		this.dcm = new DbConnManager(connectionFile);
 	}
 	
-	public DbUtil(String connectionFile, String defaultUsername, String defaultPassword) throws DbException
+	public DbUtil(String connectionFile, String defaultUsername, String defaultPassword) throws FileSystemException, IOException
 	{
 		this.dcm = new DbConnManager(connectionFile, defaultUsername, defaultPassword);
 	}
 	
-	public static void main(String[] args) throws DbException
+	public static void main(String[] args) throws FileSystemException, IOException
 	{
 		DbUtil dbu = new DbUtil();
 		dbu.run();
@@ -66,8 +67,6 @@ public class DbUtil
 	
 	public void run()
 	{
-		final String METHOD = "run";
-		
 		try
 		{
 			if (FileUtils.fileExists(this.dcm.getConnectionFile()) == false)
@@ -132,7 +131,11 @@ public class DbUtil
 		{
 			e.printStackTrace();
 		}
-		catch (DbException e)
+		catch (FileSystemException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -197,8 +200,6 @@ public class DbUtil
 	
 	private void menuRunSqlScript() throws SQLException
 	{
-		final String METHOD = "menuRunSqlScript";
-		
 		this.dcm.printKeys();
 		Utils.output("");
 		

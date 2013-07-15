@@ -27,7 +27,7 @@ import com.cffreedom.utils.file.FileUtils;
  */
 public class PasswordManager
 {
-	public static final String DEFAULT_FILE = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "pwmgr.pw";
+	public static final String DEFAULT_FILE = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "pwmgr.pw";
 	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.PasswordManager");
 	private String file = null;
 	private String masterKey = null;

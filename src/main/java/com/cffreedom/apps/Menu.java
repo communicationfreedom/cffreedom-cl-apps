@@ -1,17 +1,19 @@
 package com.cffreedom.apps;
 
-import com.cffreedom.exceptions.DbException;
+import java.io.IOException;
+
+import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.Utils;
 
 public class Menu
 {
-	public static void main(String[] args) throws DbException
+	public static void main(String[] args) throws FileSystemException, IOException
 	{
 		Menu m = new Menu();
 		m.run();
 	}
 	
-	public void run() throws DbException
+	public void run() throws FileSystemException, IOException
 	{
 		String lastMenuChoice = null;
 		boolean foundMenuItem = true;

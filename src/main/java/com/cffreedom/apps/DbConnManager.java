@@ -1,16 +1,16 @@
 package com.cffreedom.apps;
 
+import java.io.IOException;
 import java.sql.Connection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cffreedom.beans.DbConn;
-import com.cffreedom.exceptions.DbException;
+import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.ConversionUtils;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
-import com.cffreedom.utils.db.BaseDAO;
 import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.file.FileUtils;
@@ -44,31 +44,33 @@ public class DbConnManager extends ConnectionManager
 	private String defaultUsername = SystemUtils.getUsername();
 	private String defaultPassword = null;
 	
-	public DbConnManager() throws DbException
+	public DbConnManager() throws FileSystemException, IOException
 	{
 		super();
 	}
 	
-	public DbConnManager(String file) throws DbException
+	public DbConnManager(String file) throws FileSystemException, IOException
 	{
 		super(file);
 	}
 	
-	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws DbException
+	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws FileSystemException, IOException
 	{
 		super(file);
+		logger.debug("Initializing with username and password");
 		this.defaultUsername = defaultUsername;
 		this.defaultPassword = defaultPassword;
 	}
 	
-	public DbConnManager(String file, String defaultUsername, String defaultPassword, boolean cacheConnections) throws DbException
+	public DbConnManager(String file, String defaultUsername, String defaultPassword, boolean cacheConnections) throws FileSystemException, IOException
 	{
 		super(file, cacheConnections);
+		logger.debug("Initializing with username, password, and caching");
 		this.defaultUsername = defaultUsername;
 		this.defaultPassword = defaultPassword;
 	}
 	
-	public static void main(String[] args) throws DbException
+	public static void main(String[] args) throws FileSystemException, IOException
 	{
 		DbConnManager dcm = new DbConnManager();
 		dcm.run();
@@ -103,7 +105,7 @@ public class DbConnManager extends ConnectionManager
 		return dbconn;
 	}
 	
-	public void run() throws DbException
+	public void run() throws FileSystemException, IOException
 	{
 		boolean foundMenuItem = true;
 		String lastMenuChoice = null;
@@ -279,7 +281,7 @@ public class DbConnManager extends ConnectionManager
 		if (key == null)
 		{
 			type = getTypeMenu(this.lastType);
-			if (BaseDAO.isOdbc(type) == true)
+			if (DbUtils.isOdbc(type) == true)
 			{
 				db = Utils.prompt("ODBC Name", this.lastDb);
 				host = "na";
@@ -290,7 +292,7 @@ public class DbConnManager extends ConnectionManager
 				db = Utils.prompt("DB", this.lastDb);
 				host = Utils.prompt("Host", this.lastHost);
 				
-				String defaultPort = ConversionUtils.toString(BaseDAO.getDefaultPort(type));
+				String defaultPort = ConversionUtils.toString(DbUtils.getDefaultPort(type));
 				if ((defaultPort == null) || (defaultPort.equalsIgnoreCase("0") == true)) { defaultPort = this.lastPort; }
 				port = Utils.prompt("Port", defaultPort);
 				
@@ -304,7 +306,7 @@ public class DbConnManager extends ConnectionManager
 		else
 		{
 			DbConn currInfo = super.getDbConn(key);
-			if (BaseDAO.isOdbc(currInfo.getType()) == true)
+			if (DbUtils.isOdbc(currInfo.getType()) == true)
 			{
 				db = Utils.prompt("ODBC Name", currInfo.getDb());
 				host = "na";
@@ -319,8 +321,8 @@ public class DbConnManager extends ConnectionManager
 		}
 		
 		int intPort = ConversionUtils.toInt(port);
-		String driver = BaseDAO.getDriver(type);
-		String url = BaseDAO.getUrl(type, host, db, intPort);
+		String driver = DbUtils.getDriver(type);
+		String url = DbUtils.getUrl(type, host, db, intPort);
 		retConn = new DbConn(driver, url, type, host, db, intPort);
 		testConn = Utils.prompt("Test connection before adding?", "Y");
 		
@@ -351,27 +353,27 @@ public class DbConnManager extends ConnectionManager
 	{
 		String choice = null;
 		String ret = null;
-		Utils.output("1) " + BaseDAO.TYPE_DB2_JCC);
-		Utils.output("2) " + BaseDAO.TYPE_MYSQL);
-		Utils.output("3) " + BaseDAO.TYPE_SQL_SERVER);
-		Utils.output("4) " + BaseDAO.TYPE_ODBC);
+		Utils.output("1) " + DbUtils.TYPE_DB2_JCC);
+		Utils.output("2) " + DbUtils.TYPE_MYSQL);
+		Utils.output("3) " + DbUtils.TYPE_SQL_SERVER);
+		Utils.output("4) " + DbUtils.TYPE_ODBC);
 		if (defaultVal == null)
 		{
 			choice = Utils.prompt("Type");
 		}
 		else
 		{
-			if (BaseDAO.isDb2JCC(defaultVal) == true) { defaultVal = "1"; }
-			else if (BaseDAO.isMySql(defaultVal) == true) { defaultVal = "2"; }
-			else if (BaseDAO.isSqlServer(defaultVal) == true) { defaultVal = "3"; }
-			else if (BaseDAO.isOdbc(defaultVal) == true) { defaultVal = "4"; }
+			if (DbUtils.isDb2JCC(defaultVal) == true) { defaultVal = "1"; }
+			else if (DbUtils.isMySql(defaultVal) == true) { defaultVal = "2"; }
+			else if (DbUtils.isSqlServer(defaultVal) == true) { defaultVal = "3"; }
+			else if (DbUtils.isOdbc(defaultVal) == true) { defaultVal = "4"; }
 			choice = Utils.prompt("Type", defaultVal);
 		}
 		
-		if (choice.equalsIgnoreCase("1") == true) { ret = BaseDAO.TYPE_DB2_JCC; }
-		else if (choice.equalsIgnoreCase("2") == true) { ret = BaseDAO.TYPE_MYSQL; }
-		else if (choice.equalsIgnoreCase("3") == true) { ret = BaseDAO.TYPE_SQL_SERVER; }
-		else if (choice.equalsIgnoreCase("4") == true) { ret = BaseDAO.TYPE_ODBC; }
+		if (choice.equalsIgnoreCase("1") == true) { ret = DbUtils.TYPE_DB2_JCC; }
+		else if (choice.equalsIgnoreCase("2") == true) { ret = DbUtils.TYPE_MYSQL; }
+		else if (choice.equalsIgnoreCase("3") == true) { ret = DbUtils.TYPE_SQL_SERVER; }
+		else if (choice.equalsIgnoreCase("4") == true) { ret = DbUtils.TYPE_ODBC; }
 	
 		return ret;
 	}

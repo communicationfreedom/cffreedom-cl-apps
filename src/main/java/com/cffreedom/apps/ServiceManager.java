@@ -29,7 +29,7 @@ public class ServiceManager
 	
 	public void run()
 	{
-		String cmdFile = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "cmd.bat";
+		String cmdFile = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "cmd.bat";
 		boolean foundMenuItem = true;
 		
 //		try

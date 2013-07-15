@@ -27,7 +27,7 @@ import com.cffreedom.utils.Utils;
  */
 public class HgManager
 {
-	public static final String DEFAULT_FILE = SystemUtils.getMyCFConfigDir() + SystemUtils.getPathSeparator() + "hg.dat";
+	public static final String DEFAULT_FILE = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "hg.dat";
 	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.HgManager");
 	private KeyValueFileMgr kvfm = null;
 	private String file = null;
