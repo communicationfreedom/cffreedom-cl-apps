@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.cffreedom.apps.DbConnManager;
 import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.FileSystemException;
+import com.cffreedom.exceptions.InfrastructureException;
 import com.cffreedom.utils.db.ConnectionManager;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.Convert;
@@ -44,22 +45,22 @@ public class DbUtil
 	private String lastConnKey = null;
 	private String lastMenuChoice = null;
 	
-	public DbUtil() throws FileSystemException, IOException
+	public DbUtil() throws FileSystemException, IOException, InfrastructureException
 	{
 		this.dcm = new DbConnManager();
 	}
 	
-	public DbUtil(String connectionFile) throws FileSystemException, IOException
+	public DbUtil(String connectionFile) throws FileSystemException, IOException, InfrastructureException
 	{
 		this.dcm = new DbConnManager(connectionFile);
 	}
 	
-	public DbUtil(String connectionFile, String defaultUsername, String defaultPassword) throws FileSystemException, IOException
+	public DbUtil(String connectionFile, String defaultUsername, String defaultPassword) throws FileSystemException, IOException, InfrastructureException
 	{
 		this.dcm = new DbConnManager(connectionFile, defaultUsername, defaultPassword);
 	}
 	
-	public static void main(String[] args) throws FileSystemException, IOException
+	public static void main(String[] args) throws FileSystemException, IOException, InfrastructureException
 	{
 		DbUtil dbu = new DbUtil();
 		dbu.run();
@@ -127,15 +128,7 @@ public class DbUtil
 				Utils.output("\n\n");
 			}
 		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-		catch (FileSystemException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
+		catch (SQLException | FileSystemException | InfrastructureException | IOException e)
 		{
 			e.printStackTrace();
 		}

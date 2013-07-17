@@ -3,17 +3,18 @@ package com.cffreedom.apps;
 import java.io.IOException;
 
 import com.cffreedom.exceptions.FileSystemException;
+import com.cffreedom.exceptions.InfrastructureException;
 import com.cffreedom.utils.Utils;
 
 public class Menu
 {
-	public static void main(String[] args) throws FileSystemException, IOException
+	public static void main(String[] args) throws FileSystemException, IOException, InfrastructureException
 	{
 		Menu m = new Menu();
 		m.run();
 	}
 	
-	public void run() throws FileSystemException, IOException
+	public void run() throws FileSystemException, IOException, InfrastructureException
 	{
 		String lastMenuChoice = null;
 		boolean foundMenuItem = true;

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cffreedom.beans.DbConn;
 import com.cffreedom.exceptions.FileSystemException;
+import com.cffreedom.exceptions.InfrastructureException;
 import com.cffreedom.utils.Convert;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
@@ -44,17 +45,17 @@ public class DbConnManager extends ConnectionManager
 	private String defaultUsername = SystemUtils.getUsername();
 	private String defaultPassword = null;
 	
-	public DbConnManager() throws FileSystemException, IOException
+	public DbConnManager() throws FileSystemException, IOException, InfrastructureException
 	{
 		super();
 	}
 	
-	public DbConnManager(String file) throws FileSystemException, IOException
+	public DbConnManager(String file) throws FileSystemException, IOException, InfrastructureException
 	{
 		super(file);
 	}
 	
-	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws FileSystemException, IOException
+	public DbConnManager(String file, String defaultUsername, String defaultPassword) throws FileSystemException, IOException, InfrastructureException
 	{
 		super(file);
 		logger.debug("Initializing with username and password");
@@ -62,7 +63,7 @@ public class DbConnManager extends ConnectionManager
 		this.defaultPassword = defaultPassword;
 	}
 	
-	public DbConnManager(String file, String defaultUsername, String defaultPassword, boolean cacheConnections) throws FileSystemException, IOException
+	public DbConnManager(String file, String defaultUsername, String defaultPassword, boolean cacheConnections) throws FileSystemException, IOException, InfrastructureException
 	{
 		super(file, cacheConnections);
 		logger.debug("Initializing with username, password, and caching");
@@ -70,7 +71,7 @@ public class DbConnManager extends ConnectionManager
 		this.defaultPassword = defaultPassword;
 	}
 	
-	public static void main(String[] args) throws FileSystemException, IOException
+	public static void main(String[] args) throws FileSystemException, IOException, InfrastructureException
 	{
 		DbConnManager dcm = new DbConnManager();
 		dcm.run();
@@ -105,7 +106,7 @@ public class DbConnManager extends ConnectionManager
 		return dbconn;
 	}
 	
-	public void run() throws FileSystemException, IOException
+	public void run() throws FileSystemException, IOException, InfrastructureException
 	{
 		boolean foundMenuItem = true;
 		String lastMenuChoice = null;
@@ -113,7 +114,7 @@ public class DbConnManager extends ConnectionManager
 		if (FileUtils.fileExists(super.getConnectionFile()) == false)
 		{
 			String temp = Utils.prompt("File", ConnectionManager.DEFAULT_FILE);
-			super.loadConnectionFile(temp);
+			super.loadConnectionFile(temp, true);
 		}
 				
 		while (foundMenuItem == true)
