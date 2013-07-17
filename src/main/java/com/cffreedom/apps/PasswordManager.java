@@ -7,7 +7,7 @@ import com.cffreedom.beans.PasswordEntry;
 import com.cffreedom.utils.KeyValueFileMgr;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
-import com.cffreedom.utils.security.EncryptDecryptProxy;
+import com.cffreedom.utils.security.SecurityManager;
 import com.cffreedom.utils.file.FileUtils;
 
 /**
@@ -32,7 +32,7 @@ public class PasswordManager
 	private String file = null;
 	private String masterKey = null;
 	KeyValueFileMgr pwm = null;
-	EncryptDecryptProxy encDecProx = null;
+	SecurityManager secMgr = null;
 
 	public PasswordManager()
 	{
@@ -50,7 +50,7 @@ public class PasswordManager
 		{
 			logger.debug("Master key passed in");
 			this.masterKey = masterKey;
-			this.encDecProx = new EncryptDecryptProxy(this.masterKey);
+			this.secMgr = new SecurityManager(this.masterKey);
 		}
 		if (this.file != null)
 		{
@@ -79,17 +79,17 @@ public class PasswordManager
 		}
 		
 		this.pwm = new KeyValueFileMgr(this.file);
-		this.encDecProx = new EncryptDecryptProxy(this.masterKey);
+		this.secMgr = new SecurityManager(this.masterKey);
 		
 		String masterKeyFile = this.file + ".priv";
 		if (FileUtils.fileExists(masterKeyFile) == false)
 		{
-			FileUtils.writeStringToFile(masterKeyFile, this.encDecProx.encrypt(this.masterKey), false);
+			FileUtils.writeStringToFile(masterKeyFile, this.secMgr.encrypt(this.masterKey), false);
 		}
 		
 		try
 		{
-			if (this.encDecProx.decrypt(FileUtils.getFileContents(masterKeyFile)).compareTo(this.masterKey) != 0)
+			if (this.secMgr.decrypt(FileUtils.getFileContents(masterKeyFile)).compareTo(this.masterKey) != 0)
 			{
 				Utils.output("ERROR: Incorrect master key");
 				return;
@@ -253,7 +253,7 @@ public class PasswordManager
 		if (user == null) { user = ""; }
 		if (pass == null) { pass = ""; }
 		if (note == null) { note = ""; }
-		pass = this.encDecProx.encrypt(pass);
+		pass = this.secMgr.encrypt(pass);
 		PasswordEntry pe = new PasswordEntry(user, pass, note);
 		return this.pwm.addEntry(key, pe);
 	}
@@ -266,7 +266,7 @@ public class PasswordManager
 	public String getPassword(String key)
 	{
 		String val = ((PasswordEntry)this.pwm.getEntry(key)).getPassword();
-		return this.encDecProx.decrypt(val);
+		return this.secMgr.decrypt(val);
 	}
 	
 	public String getNote(String key)
