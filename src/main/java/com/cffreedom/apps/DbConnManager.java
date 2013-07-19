@@ -114,7 +114,7 @@ public class DbConnManager extends ConnectionManager
 		if (FileUtils.fileExists(super.getConnectionFile()) == false)
 		{
 			String temp = Utils.prompt("File", ConnectionManager.DEFAULT_FILE);
-			super.loadConnectionFile(temp, true);
+			super.loadFile(temp, true);
 		}
 				
 		while (foundMenuItem == true)
@@ -237,7 +237,7 @@ public class DbConnManager extends ConnectionManager
 	private void menuGetEntry()
 	{
 		String key = Utils.prompt("Key");
-		super.printConnInfo(key);
+		super.printKey(key);
 	}
 	
 	private void menuTestConnection()

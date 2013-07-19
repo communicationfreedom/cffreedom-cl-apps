@@ -73,7 +73,7 @@ public class DbUtil
 			if (FileUtils.fileExists(this.dcm.getConnectionFile()) == false)
 			{
 				String temp = Utils.prompt("File", ConnectionManager.DEFAULT_FILE);
-				this.dcm.loadConnectionFile(temp);
+				this.dcm.loadFile(temp);
 			}
 			
 			boolean foundMenuItem = true;

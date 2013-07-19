@@ -7,7 +7,7 @@ import com.cffreedom.beans.PasswordEntry;
 import com.cffreedom.utils.KeyValueFileMgr;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
-import com.cffreedom.utils.security.SecurityManager;
+import com.cffreedom.utils.security.SecurityCipher;
 import com.cffreedom.utils.file.FileUtils;
 
 /**
@@ -32,7 +32,7 @@ public class PasswordManager
 	private String file = null;
 	private String masterKey = null;
 	KeyValueFileMgr pwm = null;
-	SecurityManager secMgr = null;
+	SecurityCipher cipher = null;
 
 	public PasswordManager()
 	{
@@ -50,7 +50,7 @@ public class PasswordManager
 		{
 			logger.debug("Master key passed in");
 			this.masterKey = masterKey;
-			this.secMgr = new SecurityManager(this.masterKey);
+			this.cipher = new SecurityCipher(this.masterKey);
 		}
 		if (this.file != null)
 		{
@@ -79,17 +79,17 @@ public class PasswordManager
 		}
 		
 		this.pwm = new KeyValueFileMgr(this.file);
-		this.secMgr = new SecurityManager(this.masterKey);
+		this.cipher = new SecurityCipher(this.masterKey);
 		
 		String masterKeyFile = this.file + ".priv";
 		if (FileUtils.fileExists(masterKeyFile) == false)
 		{
-			FileUtils.writeStringToFile(masterKeyFile, this.secMgr.encrypt(this.masterKey), false);
+			FileUtils.writeStringToFile(masterKeyFile, this.cipher.encrypt(this.masterKey), false);
 		}
 		
 		try
 		{
-			if (this.secMgr.decrypt(FileUtils.getFileContents(masterKeyFile)).compareTo(this.masterKey) != 0)
+			if (this.cipher.decrypt(FileUtils.getFileContents(masterKeyFile)).compareTo(this.masterKey) != 0)
 			{
 				Utils.output("ERROR: Incorrect master key");
 				return;
@@ -253,7 +253,7 @@ public class PasswordManager
 		if (user == null) { user = ""; }
 		if (pass == null) { pass = ""; }
 		if (note == null) { note = ""; }
-		pass = this.secMgr.encrypt(pass);
+		pass = this.cipher.encrypt(pass);
 		PasswordEntry pe = new PasswordEntry(user, pass, note);
 		return this.pwm.addEntry(key, pe);
 	}
@@ -266,7 +266,7 @@ public class PasswordManager
 	public String getPassword(String key)
 	{
 		String val = ((PasswordEntry)this.pwm.getEntry(key)).getPassword();
-		return this.secMgr.decrypt(val);
+		return this.cipher.decrypt(val);
 	}
 	
 	public String getNote(String key)
