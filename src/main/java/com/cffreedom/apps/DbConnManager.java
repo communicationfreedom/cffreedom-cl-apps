@@ -333,12 +333,7 @@ public class DbConnManager extends ConnectionManager
 			String pass = promptForPassword();
 			try
 			{
-				boolean success = DbUtils.testConnection(retConn.getType(), retConn.getHost(), retConn.getDb(), retConn.getPort(), user, pass);
-				if (success == false)
-				{
-					Utils.output("The connection did not test successfully so will NOT be added");
-					retConn = null;
-				}
+				DbUtils.testConnection(retConn.getType(), retConn.getHost(), retConn.getDb(), retConn.getPort(), user, pass);
 			}
 			catch (Exception e)
 			{
