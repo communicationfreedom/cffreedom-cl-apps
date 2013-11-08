@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cffreedom.beans.DbConn;
+import com.cffreedom.beans.DbType;
 import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.exceptions.InfrastructureException;
 import com.cffreedom.utils.Convert;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 import com.cffreedom.utils.db.ConnectionManager;
-import com.cffreedom.utils.db.DbType;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.file.FileUtils;
 
@@ -39,7 +39,7 @@ import com.cffreedom.utils.file.FileUtils;
 public class DbConnManager extends ConnectionManager
 {
 	private static final Logger logger = LoggerFactory.getLogger("com.cffreedom.apps.DbConnManager");
-	private String lastType = null;
+	private DbType lastType = null;
 	private String lastDb = null;
 	private String lastHost = null;
 	private String lastPort = null;
@@ -274,7 +274,7 @@ public class DbConnManager extends ConnectionManager
 	private DbConn getValues(String key)
 	{
 		DbConn retConn = null;
-		String type = null;
+		DbType dbType = null;
 		String db = null;
 		String host = null;
 		String port = null;
@@ -282,8 +282,8 @@ public class DbConnManager extends ConnectionManager
 		
 		if (key == null)
 		{
-			type = getTypeMenu(this.lastType);
-			if (DbUtils.isOdbc(type) == true)
+			dbType = getTypeMenu(this.lastType);
+			if (dbType == DbType.ODBC)
 			{
 				db = Utils.prompt("ODBC Name", this.lastDb);
 				host = "na";
@@ -294,7 +294,7 @@ public class DbConnManager extends ConnectionManager
 				db = Utils.prompt("DB", this.lastDb);
 				host = Utils.prompt("Host", this.lastHost);
 				
-				String defaultPort = Convert.toString(DbUtils.getDefaultPort(DbUtils.getDbType(type)));
+				String defaultPort = Convert.toString(DbUtils.getDefaultPort(dbType));
 				if ((defaultPort == null) || (defaultPort.equalsIgnoreCase("0") == true)) { defaultPort = this.lastPort; }
 				port = Utils.prompt("Port", defaultPort);
 				
@@ -302,13 +302,13 @@ public class DbConnManager extends ConnectionManager
 				this.lastPort = port;
 			}
 			
-			this.lastType = type;
+			this.lastType = dbType;
 			this.lastDb = db;
 		}
 		else
 		{
 			DbConn currInfo = super.getDbConn(key);
-			if (DbUtils.isOdbc(currInfo.getType()) == true)
+			if (dbType == DbType.ODBC)
 			{
 				db = Utils.prompt("ODBC Name", currInfo.getDb());
 				host = "na";
@@ -323,10 +323,9 @@ public class DbConnManager extends ConnectionManager
 		}
 		
 		int intPort = Convert.toInt(port);
-		DbType dbType = DbUtils.getDbType(type);
 		String driver = DbUtils.getDriver(dbType);
 		String url = DbUtils.getUrl(dbType, host, db, intPort);
-		retConn = new DbConn(driver, url, type, host, db, intPort);
+		retConn = new DbConn(driver, url, dbType, host, db, intPort);
 		testConn = Utils.prompt("Test connection before adding?", "Y");
 		
 		if (testConn.equalsIgnoreCase("Y") == true)
@@ -347,31 +346,31 @@ public class DbConnManager extends ConnectionManager
 		return retConn;
 	}
 	
-	private String getTypeMenu(String defaultVal)
+	private DbType getTypeMenu(DbType defaultVal)
 	{
 		String choice = null;
-		String ret = null;
-		Utils.output("1) " + DbUtils.TYPE_DB2_JCC);
-		Utils.output("2) " + DbUtils.TYPE_MYSQL);
-		Utils.output("3) " + DbUtils.TYPE_SQL_SERVER);
-		Utils.output("4) " + DbUtils.TYPE_ODBC);
+		DbType ret = null;
+		Utils.output("1) " + DbType.DB2);
+		Utils.output("2) " + DbType.MYSQL);
+		Utils.output("3) " + DbType.SQL_SERVER);
+		Utils.output("4) " + DbType.ODBC);
 		if (defaultVal == null)
 		{
 			choice = Utils.prompt("Type");
 		}
 		else
 		{
-			if (DbUtils.isDb2JCC(defaultVal) == true) { defaultVal = "1"; }
-			else if (DbUtils.isMySql(defaultVal) == true) { defaultVal = "2"; }
-			else if (DbUtils.isSqlServer(defaultVal) == true) { defaultVal = "3"; }
-			else if (DbUtils.isOdbc(defaultVal) == true) { defaultVal = "4"; }
-			choice = Utils.prompt("Type", defaultVal);
+			if (defaultVal == DbType.DB2) { choice = "1"; }
+			else if (defaultVal == DbType.MYSQL) { choice = "2"; }
+			else if (defaultVal == DbType.SQL_SERVER) { choice = "3"; }
+			else if (defaultVal == DbType.ODBC) { choice = "4"; }
+			choice = Utils.prompt("Type", choice);
 		}
 		
-		if (choice.equalsIgnoreCase("1") == true) { ret = DbUtils.TYPE_DB2_JCC; }
-		else if (choice.equalsIgnoreCase("2") == true) { ret = DbUtils.TYPE_MYSQL; }
-		else if (choice.equalsIgnoreCase("3") == true) { ret = DbUtils.TYPE_SQL_SERVER; }
-		else if (choice.equalsIgnoreCase("4") == true) { ret = DbUtils.TYPE_ODBC; }
+		if (choice.equalsIgnoreCase("1") == true) { ret = DbType.DB2; }
+		else if (choice.equalsIgnoreCase("2") == true) { ret = DbType.MYSQL; }
+		else if (choice.equalsIgnoreCase("3") == true) { ret = DbType.SQL_SERVER; }
+		else if (choice.equalsIgnoreCase("4") == true) { ret = DbType.ODBC; }
 	
 		return ret;
 	}
