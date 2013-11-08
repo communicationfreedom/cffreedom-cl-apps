@@ -323,7 +323,7 @@ public class DbConnManager extends ConnectionManager
 		}
 		
 		int intPort = Convert.toInt(port);
-		String driver = DbUtils.getDriver(dbType);
+		String driver = DbUtils.getDefaultDriver(dbType);
 		String url = DbUtils.getUrl(dbType, host, db, intPort);
 		retConn = new DbConn(driver, url, dbType, host, db, intPort);
 		testConn = Utils.prompt("Test connection before adding?", "Y");
