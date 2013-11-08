@@ -13,6 +13,7 @@ import com.cffreedom.utils.Convert;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
 import com.cffreedom.utils.db.ConnectionManager;
+import com.cffreedom.utils.db.DbType;
 import com.cffreedom.utils.db.DbUtils;
 import com.cffreedom.utils.file.FileUtils;
 
@@ -293,7 +294,7 @@ public class DbConnManager extends ConnectionManager
 				db = Utils.prompt("DB", this.lastDb);
 				host = Utils.prompt("Host", this.lastHost);
 				
-				String defaultPort = Convert.toString(DbUtils.getDefaultPort(type));
+				String defaultPort = Convert.toString(DbUtils.getDefaultPort(DbUtils.getDbType(type)));
 				if ((defaultPort == null) || (defaultPort.equalsIgnoreCase("0") == true)) { defaultPort = this.lastPort; }
 				port = Utils.prompt("Port", defaultPort);
 				
@@ -322,8 +323,9 @@ public class DbConnManager extends ConnectionManager
 		}
 		
 		int intPort = Convert.toInt(port);
-		String driver = DbUtils.getDriver(type);
-		String url = DbUtils.getUrl(type, host, db, intPort);
+		DbType dbType = DbUtils.getDbType(type);
+		String driver = DbUtils.getDriver(dbType);
+		String url = DbUtils.getUrl(dbType, host, db, intPort);
 		retConn = new DbConn(driver, url, type, host, db, intPort);
 		testConn = Utils.prompt("Test connection before adding?", "Y");
 		
@@ -333,7 +335,7 @@ public class DbConnManager extends ConnectionManager
 			String pass = promptForPassword();
 			try
 			{
-				DbUtils.testConnection(retConn.getType(), retConn.getHost(), retConn.getDb(), retConn.getPort(), user, pass);
+				DbUtils.testConnection(dbType, retConn.getHost(), retConn.getDb(), retConn.getPort(), user, pass);
 			}
 			catch (Exception e)
 			{
