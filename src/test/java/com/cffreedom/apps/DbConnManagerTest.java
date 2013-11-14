@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.cffreedom.beans.DbConn;
+import com.cffreedom.beans.DbDriver;
 import com.cffreedom.beans.DbType;
 import com.cffreedom.utils.db.DbUtils;
 
@@ -13,7 +14,7 @@ public class DbConnManagerTest
 {
 	private static final String GOOD_KEY = "odbc";
 	private static final String GOOD_DB = "OdbcDb";
-	private static final String GOOD_DRIVER = DbUtils.DRIVER_ODBC;
+	private static final String GOOD_DRIVER = DbDriver.ODBC.value;
 	DbConnManager dbcm = null;
 	
 	@Before
