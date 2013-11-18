@@ -156,7 +156,7 @@ public class DbUtil
 		return Utils.prompt("Choice", lastChoice);
 	}
 	
-	private void menuRunSql() throws SQLException
+	private void menuRunSql() throws SQLException, FileSystemException
 	{
 		this.dcm.printKeys();
 		Utils.output("");
@@ -192,7 +192,7 @@ public class DbUtil
 		}
 	}
 	
-	private void menuRunSqlScript() throws SQLException
+	private void menuRunSqlScript() throws SQLException, FileSystemException
 	{
 		this.dcm.printKeys();
 		Utils.output("");
@@ -284,7 +284,7 @@ public class DbUtil
 		}
 	}
 	
-	private void menuCleanupScriptHistFile()
+	private void menuCleanupScriptHistFile() throws FileSystemException
 	{
 		if (Utils.prompt("Are you sure you want to remove missing files from your history?", "N").equalsIgnoreCase("Y") == true)
 		{
@@ -296,11 +296,9 @@ public class DbUtil
 				{
 					if (FileUtils.fileExists(file) == false)
 					{
-						if (FileUtils.stripLinesInFileContaining(SCRIPT_HIST, file) == true)
-						{
-							Utils.output("Removed from hist: " + file);
-							counter++;
-						}
+						Utils.output("Removing from hist: " + file);
+						FileUtils.stripLinesInFileContaining(SCRIPT_HIST, file);
+						counter++;
 					}
 				}
 				Utils.output("Removed " + counter + " files from your history");
@@ -351,15 +349,15 @@ public class DbUtil
 		return retVal;
 	}
 	
-	public static boolean addToScriptHist(String scriptFile)
+	public static void addToScriptHist(String scriptFile) throws FileSystemException
 	{
 		FileUtils.stripLinesInFileContaining(SCRIPT_HIST, scriptFile);
-		return FileUtils.appendLine(scriptFile, SCRIPT_HIST);
+		FileUtils.appendLine(scriptFile, SCRIPT_HIST);
 	}
 	
-	public static boolean addToSqlHist(String sql)
+	public static void addToSqlHist(String sql) throws FileSystemException
 	{
 		FileUtils.stripLinesInFileContaining(SQL_HIST, sql);
-		return FileUtils.appendLine(sql, SQL_HIST);
+		FileUtils.appendLine(sql, SQL_HIST);
 	}
 }

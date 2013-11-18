@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cffreedom.beans.PasswordEntry;
+import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.KeyValueFileMgr;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
@@ -84,7 +85,13 @@ public class PasswordManager
 		String masterKeyFile = this.file + ".priv";
 		if (FileUtils.fileExists(masterKeyFile) == false)
 		{
-			FileUtils.writeStringToFile(masterKeyFile, this.cipher.encrypt(this.masterKey), false);
+			try 
+			{
+				FileUtils.writeStringToFile(masterKeyFile, this.cipher.encrypt(this.masterKey), false);
+			} catch (FileSystemException e) {
+				Utils.output("ERROR: Unable to write file");
+				return;
+			}
 		}
 		
 		try
@@ -157,11 +164,18 @@ public class PasswordManager
 						if ((key.length() > 0) && (user.length() > 0) && (pass.length() > 0))
 						{
 							pe = new PasswordEntry(user, pass, note);
-							if (this.pwm.updateEntry(key, pe) == true)
+							try
 							{
-								Utils.output("Updated: " + key);
+								if (this.pwm.updateEntry(key, pe) == true)
+								{
+									Utils.output("Updated: " + key);
+								}
+								else
+								{
+									Utils.output("ERROR updating: " + key);
+								}
 							}
-							else
+							catch (Exception e)
 							{
 								Utils.output("ERROR updating: " + key);
 							}
@@ -185,11 +199,18 @@ public class PasswordManager
 				{
 					if (Utils.prompt("Are you sure you want to delete the entry: " + key, "N").equalsIgnoreCase("Y") == true)
 					{
-						if (this.pwm.removeEntry(key) == true)
+						try
 						{
-							Utils.output("Removed: " + key);
+							if (this.pwm.removeEntry(key) == true)
+							{
+								Utils.output("Removed: " + key);
+							}
+							else
+							{
+								Utils.output("FAILED removing: " + key);
+							}
 						}
-						else
+						catch (Exception e)
 						{
 							Utils.output("ERROR removing: " + key);
 						}
@@ -255,7 +276,16 @@ public class PasswordManager
 		if (note == null) { note = ""; }
 		pass = this.cipher.encrypt(pass);
 		PasswordEntry pe = new PasswordEntry(user, pass, note);
-		return this.pwm.addEntry(key, pe);
+		
+		try
+		{
+			return this.pwm.addEntry(key, pe);
+		}
+		catch (Exception e)
+		{
+			Utils.output("ERROR adding: " + key);
+			return false;
+		}
 	}
 	
 	public String getUsername(String key)

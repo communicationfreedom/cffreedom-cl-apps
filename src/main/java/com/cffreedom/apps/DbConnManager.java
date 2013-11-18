@@ -184,11 +184,18 @@ public class DbConnManager extends ConnectionManager
 		
 		if ( (key.length() > 0) && (value != null) )
 		{
-			if (super.addConnection(key, value) == true)
+			try
 			{
-				Utils.output("Added: " + key);
+				if (super.addConnection(key, value) == true)
+				{
+					Utils.output("Added: " + key);
+				}
+				else
+				{
+					Utils.output("FAILED adding: " + key);
+				}
 			}
-			else
+			catch (Exception e)
 			{
 				Utils.output("ERROR adding: " + key);
 			}
@@ -207,11 +214,18 @@ public class DbConnManager extends ConnectionManager
 			
 			if ( (key.length() > 0) && (value != null) )
 			{
-				if (super.updateConnection(key, value) == true)
+				try
 				{
-					Utils.output("Updated: " + key);
+					if (super.updateConnection(key, value) == true)
+					{
+						Utils.output("Updated: " + key);
+					}
+					else
+					{
+						Utils.output("FAILED updating: " + key);
+					}
 				}
-				else
+				catch (Exception e)
 				{
 					Utils.output("ERROR updating: " + key);
 				}
@@ -230,11 +244,18 @@ public class DbConnManager extends ConnectionManager
 		String key = Utils.prompt("Key");
 		if (key.length() > 0)
 		{
-			if (super.deleteConnection(key) == true)
+			try
 			{
-				Utils.output("Removed: " + key);
+				if (super.deleteConnection(key) == true)
+				{
+					Utils.output("Removed: " + key);
+				}
+				else
+				{
+					Utils.output("FAILED removing: " + key);
+				}
 			}
-			else
+			catch (Exception e)
 			{
 				Utils.output("ERROR removing: " + key);
 			}

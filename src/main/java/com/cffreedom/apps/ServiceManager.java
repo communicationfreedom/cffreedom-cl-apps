@@ -1,5 +1,6 @@
 package com.cffreedom.apps;
 
+import com.cffreedom.exceptions.FileSystemException;
 import com.cffreedom.utils.file.FileUtils;
 import com.cffreedom.utils.SystemUtils;
 import com.cffreedom.utils.Utils;
@@ -32,8 +33,8 @@ public class ServiceManager
 		String cmdFile = SystemUtils.getDirConfig() + SystemUtils.getPathSeparator() + "cmd.bat";
 		boolean foundMenuItem = true;
 		
-//		try
-//		{
+		try
+		{
 			while (foundMenuItem == true)
 			{
 				String option = menu();
@@ -81,11 +82,11 @@ public class ServiceManager
 				}
 				Utils.output("\n\n");
 			}
-//		}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		}
+		}
+		catch (FileSystemException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	private String menu()
