@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -288,7 +289,7 @@ public class DbUtil
 		if (Utils.prompt("Are you sure you want to remove missing files from your history?", "N").equalsIgnoreCase("Y") == true)
 		{
 			int counter = 0;
-			ArrayList<String> files = FileUtils.getFileLines(SCRIPT_HIST);
+			List<String> files = FileUtils.getFileLines(SCRIPT_HIST);
 			if (files.size() > 0)
 			{
 				for (String file : files)
@@ -316,7 +317,7 @@ public class DbUtil
 		{
 			if (FileUtils.fileExists(SCRIPT_HIST) == true)
 			{
-				ArrayList<String> files = FileUtils.getFileLines(SCRIPT_HIST);
+				List<String> files = FileUtils.getFileLines(SCRIPT_HIST);
 				if (files.size() > 0)
 				{
 					for (String file : files)

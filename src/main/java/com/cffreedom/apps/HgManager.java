@@ -1,6 +1,7 @@
 package com.cffreedom.apps;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,7 +256,7 @@ public class HgManager
 				String projectList = Utils.prompt("Project List File", "D:\\jpod\\eclipse\\workspace\\jPod Utils\\mercurial-projects.txt");
 				String delete = Utils.prompt("Delete local contents if they exist?", "N");
 				String update = Utils.prompt("Update local contents if they exist?", "N");
-				ArrayList<String> projects = FileUtils.getFileLines(projectList);
+				List<String> projects = FileUtils.getFileLines(projectList);
 				for (String project : projects)
 				{
 					String dir = FileUtils.buildPath(baseDir, project);

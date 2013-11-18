@@ -167,16 +167,18 @@ public class DbConnManager extends ConnectionManager
 		Utils.output("=================================");
 		Utils.output("");
 		Utils.output("1) List keys");
-		Utils.output("2) Add entry");
-		Utils.output("3) Update entry");
-		Utils.output("4) Delete entry");
-		Utils.output("5) Get entry");
-		Utils.output("6) Test entry");
+		Utils.output("2) Add Connection");
+		Utils.output("3) Update Connection");
+		Utils.output("4) Delete Connection");
+		Utils.output("5) Get Connection");
+		Utils.output("6) Test Connection");
 		return Utils.prompt("Choice", defaultChoice);
 	}
 	
 	private void menuAdd()
 	{
+		Utils.output("Add Connection");
+		Utils.output("-------------------");
 		String key = Utils.prompt("Key");
 		DbConn value = getValues(null);
 		
@@ -195,6 +197,8 @@ public class DbConnManager extends ConnectionManager
 	
 	private void menuUpdate()
 	{
+		Utils.output("Update Connection");
+		Utils.output("-------------------");
 		String key = Utils.prompt("Key");
 		
 		if (super.keyExists(key) == true)
@@ -221,6 +225,8 @@ public class DbConnManager extends ConnectionManager
 	
 	private void menuDelete()
 	{
+		Utils.output("Delete Connection");
+		Utils.output("-------------------");
 		String key = Utils.prompt("Key");
 		if (key.length() > 0)
 		{
@@ -237,12 +243,16 @@ public class DbConnManager extends ConnectionManager
 	
 	private void menuGetEntry()
 	{
+		Utils.output("Get Connection");
+		Utils.output("-------------------");
 		String key = Utils.prompt("Key");
 		super.printKey(key);
 	}
 	
 	private void menuTestConnection()
 	{
+		Utils.output("Test Connection");
+		Utils.output("-------------------");
 		String key = Utils.prompt("Key");
 		
 		if (super.keyExists(key) == true)
