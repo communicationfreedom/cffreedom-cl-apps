@@ -8,13 +8,13 @@ import com.cffreedom.utils.Utils;
 
 public class Menu
 {
-	public static void main(String[] args) throws FileSystemException, IOException, InfrastructureException
+	public static void main(String[] args) throws FileSystemException, IOException, InfrastructureException, Exception
 	{
 		Menu m = new Menu();
 		m.run();
 	}
 	
-	public void run() throws FileSystemException, IOException, InfrastructureException
+	public void run() throws FileSystemException, IOException, InfrastructureException, Exception
 	{
 		String lastMenuChoice = null;
 		boolean foundMenuItem = true;
@@ -38,6 +38,11 @@ public class Menu
 				ServiceManager sm = new ServiceManager();
 				sm.run();
 			}
+			else if (option.equalsIgnoreCase("4") == true)
+			{
+				FileTools ft = new FileTools();
+				ft.run();
+			}
 			else
 			{
 				foundMenuItem = false;
@@ -59,6 +64,7 @@ public class Menu
 		System.out.println("1) Password Manager");
 		System.out.println("2) DB Utils");
 		System.out.println("3) Service Manager");
+		System.out.println("4) File Tools");
 		return Utils.prompt("Choice", defaultChoice);
 	}
 }
